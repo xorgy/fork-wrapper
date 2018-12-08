@@ -35,29 +35,4 @@ main(int argc, char** argv)
         perror("could not exec");
         exit(EXIT_FAILURE);
     }
-
-    int last_exit_status = 0;
-
-    while(1) {
-        int stat;
-        int pid = wait(&stat);
-
-        if(pid < 0) {
-            if(errno == EINTR) {
-                continue;
-            }
-
-            if(errno == ECHILD) {
-                // there are no more children, exit with the exit value of the
-                // last child to terminate
-                exit(last_exit_status);
-            }
-
-            // something went terribly wrong...
-            perror("could not wait");
-            exit(EXIT_FAILURE);
-        }
-
-        last_exit_status = WEXITSTATUS(stat);
-    }
 }
